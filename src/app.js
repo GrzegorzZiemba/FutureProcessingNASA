@@ -1,14 +1,21 @@
-// const express =require('express')
+var express = require('express');
 var request = require('request');
+var path = require('path');
 var setVariable = require('./utils/setVariables');
 var capsule = require('./capsule/capsule');
 var connect = require('./mongodb/connect');
-// const app = express()
-connect;
-request('https://api.spacexdata.com/v4/capsules', function (error, response, body) {
-    console.log(error);
-    var set = setVariable(JSON.parse(body));
-    console.log("connect" + connect.client);
-    capsule.getDataFromApi(set, connect.client);
+var app = express();
+app.use(express.static(path.join(__dirname, "public")));
+app.set("view engine", "ejs");
+app.set("views", "views");
+var capsuleInfo;
+capsule.getcapsule(function (data) {
+    capsuleInfo = data;
 });
-// app.listen(3000)
+app.get("/capsules", function (req, res) {
+    console.log(capsuleInfo);
+    res.render("capsules", {
+        capsules: capsuleInfo
+    });
+});
+app.listen(3000);

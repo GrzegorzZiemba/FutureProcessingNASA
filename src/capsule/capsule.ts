@@ -1,8 +1,27 @@
 import { getCapsules } from "../interfaces/capsuleInterface";
+const request = require('request')
 const connect = require('../mongodb/connect')
+const { MongoClient } = require("mongodb");
+
+const uri = "mongodb://localhost:27017/?readPreference=primary&ssl=false";
+const client = new MongoClient(uri);
 let collectedData: getCapsules[] = [];
 
-async function getDataFromApi(data: any, client) {
+exports.getcapsule = ( callback) => {
+	const url = `https://api.spacexdata.com/v4/capsules`;
+	request({ url, json: true }, (err, { body }) => {
+		if (err) {
+			console.log('Critical error')
+		} 
+		 else {
+			getDataFromApi(body, callback)
+		}
+	});
+};
+
+
+
+async function getDataFromApi(data: any,callback) {
 	console.log(typeof data);
 	// console.log(data)
 	await data.forEach((element) => {
@@ -20,11 +39,9 @@ async function getDataFromApi(data: any, client) {
 			client
 		);
 	});
-	
+	callback(collectedData)
 }
 
 
 
-module.exports = {
-	getDataFromApi: getDataFromApi,
-};
+

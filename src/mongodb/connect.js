@@ -6,22 +6,45 @@ const client = new MongoClient(uri);
 async function main() {
 	try {
 		await client.connect();
-
-		await listDatabases(client);
 	} catch (e) {
 		console.error(e);
 	}
-	// finally {
-	//     await client.close();
-	// }
 }
 main().catch(console.error);
 
 async function getInto(last_update, id, serial, type) {
 	const doc = { last_update, id, serial, type };
-	console.log("to jest ____------------- " + client);
-	await client.db().collection("NewaDb").insertOne(doc);
-	console.log(`A document was inserted with the _id: ${result.insertedId}`);
+
+	console.log(doc.id);
+	client
+		.db()
+		.collection("ThatDb")
+		.find({})
+		.toArray(function (err, result) {
+			if (err) throw err;
+			let checkVal = 0;
+			result.forEach((element) => {
+				if (element.id == doc.id) {
+					console.log("Pasuje");
+					console.log(element.id);
+					console.log(doc.id);
+					checkVal = 1;
+					return;
+				}
+			});
+			if (checkVal == 1) {
+				return;
+			} else {
+				console.log("Tworze baze :)");
+				putIntoDb();
+			}
+		});
+
+	async function putIntoDb() {
+		await client.db().collection("ThatDb").insertOne(doc);
+	}
+
+	// }
 }
 
 module.exports = {

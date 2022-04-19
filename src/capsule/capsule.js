@@ -36,9 +36,25 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+var request = require('request');
 var connect = require('../mongodb/connect');
+var MongoClient = require("mongodb").MongoClient;
+var uri = "mongodb://localhost:27017/?readPreference=primary&ssl=false";
+var client = new MongoClient(uri);
 var collectedData = [];
-function getDataFromApi(data, client) {
+exports.getcapsule = function (callback) {
+    var url = "https://api.spacexdata.com/v4/capsules";
+    request({ url: url, json: true }, function (err, _a) {
+        var body = _a.body;
+        if (err) {
+            console.log('Critical error');
+        }
+        else {
+            getDataFromApi(body, callback);
+        }
+    });
+};
+function getDataFromApi(data, callback) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -57,11 +73,9 @@ function getDataFromApi(data, client) {
                 case 1:
                     // console.log(data)
                     _a.sent();
+                    callback(collectedData);
                     return [2 /*return*/];
             }
         });
     });
 }
-module.exports = {
-    getDataFromApi: getDataFromApi
-};
