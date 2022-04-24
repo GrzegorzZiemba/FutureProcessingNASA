@@ -1,53 +1,35 @@
 const { MongoClient } = require("mongodb");
-
+const connectionUtils = require("./connection_utils.js");
 const uri = "mongodb://localhost:27017/?readPreference=primary&ssl=false";
 const client = new MongoClient(uri);
 
 async function main() {
 	try {
 		await client.connect();
+		console.log("connected");
 	} catch (e) {
 		console.error(e);
 	}
 }
 main().catch(console.error);
 
-async function getInto(last_update, id, serial, type) {
+async function capsuleData(
+	last_update = null,
+	id = null,
+	serial = null,
+	type = null,
+	callback = null
+) {
 	const doc = { last_update, id, serial, type };
-
-	console.log(doc.id);
-	client
-		.db()
-		.collection("ThatDb")
-		.find({})
-		.toArray(function (err, result) {
-			if (err) throw err;
-			let checkVal = 0;
-			result.forEach((element) => {
-				if (element.id == doc.id) {
-					console.log("Pasuje");
-					console.log(element.id);
-					console.log(doc.id);
-					checkVal = 1;
-					return;
-				}
-			});
-			if (checkVal == 1) {
-				return;
-			} else {
-				console.log("Tworze baze :)");
-				putIntoDb();
-			}
-		});
-
-	async function putIntoDb() {
-		await client.db().collection("ThatDb").insertOne(doc);
+	if (id == null) {
+		console.log("Null");
+		await connectionUtils.getDatafromDatabase("ThatDb", callback, client);
+	} else {
+		connectionUtils.writeToDatabase("ThatDb", client, doc.id, doc);
 	}
-
-	// }
 }
 
 module.exports = {
 	client: client,
-	getInto: getInto,
+	capsuleData: capsuleData,
 };

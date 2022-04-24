@@ -1,10 +1,7 @@
 import { getCapsules } from "../interfaces/capsuleInterface";
 const request = require('request')
 const connect = require('../mongodb/connect')
-const { MongoClient } = require("mongodb");
 
-const uri = "mongodb://localhost:27017/?readPreference=primary&ssl=false";
-const client = new MongoClient(uri);
 let collectedData: getCapsules[] = [];
 
 exports.getcapsule = ( callback) => {
@@ -19,11 +16,23 @@ exports.getcapsule = ( callback) => {
 	});
 };
 
+async function getDataFromDb() {
+	await connect.capsuleData(null, null, null, null, data => collectedData = data)
+	console.log("done")
+	console.log(collectedData + ' db')
+	return collectedData
+
+}
 
 
 async function getDataFromApi(data: any,callback) {
-	console.log(typeof data);
-	// console.log(data)
+	let collectedData = [];
+
+	if(data == "Not Found"){
+		collectedData = await getDataFromDb();
+		console.log(collectedData + 'if')
+	}
+	else{
 	await data.forEach((element) => {
 		collectedData.push({
 			last_update: element.last_update,
@@ -31,14 +40,15 @@ async function getDataFromApi(data: any,callback) {
 			serial: element.serial,
 			type: element.type,
 		});
-		connect.getInto(
+		connect.capsuleData(
 			element.last_update,
 			element.id,
 			element.serial,
 			element.type,
-			client
+			
 		);
 	});
+}
 	callback(collectedData)
 }
 

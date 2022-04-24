@@ -2,20 +2,12 @@ var express = require('express');
 var request = require('request');
 var path = require('path');
 var setVariable = require('./utils/setVariables');
-var capsule = require('./capsule/capsule');
-var connect = require('./mongodb/connect');
 var app = express();
+//setting express for static files like css in ejs view engine
 app.use(express.static(path.join(__dirname, "public")));
+// setting ejs as view engine https://ejs.co/#docs
 app.set("view engine", "ejs");
 app.set("views", "views");
-var capsuleInfo;
-capsule.getcapsule(function (data) {
-    capsuleInfo = data;
-});
-app.get("/capsules", function (req, res) {
-    console.log(capsuleInfo);
-    res.render("capsules", {
-        capsules: capsuleInfo
-    });
-});
+var capsuleRoutes = require('./routes/capsuleRoute');
+app.use(capsuleRoutes);
 app.listen(3000);

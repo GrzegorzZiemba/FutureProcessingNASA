@@ -38,9 +38,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var request = require('request');
 var connect = require('../mongodb/connect');
-var MongoClient = require("mongodb").MongoClient;
-var uri = "mongodb://localhost:27017/?readPreference=primary&ssl=false";
-var client = new MongoClient(uri);
 var collectedData = [];
 exports.getcapsule = function (callback) {
     var url = "https://api.spacexdata.com/v4/capsules";
@@ -54,25 +51,49 @@ exports.getcapsule = function (callback) {
         }
     });
 };
-function getDataFromApi(data, callback) {
+function getDataFromDb() {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log(typeof data);
-                    // console.log(data)
-                    return [4 /*yield*/, data.forEach(function (element) {
-                            collectedData.push({
-                                last_update: element.last_update,
-                                id: element.id,
-                                serial: element.serial,
-                                type: element.type
-                            });
-                            connect.getInto(element.last_update, element.id, element.serial, element.type, client);
-                        })];
+                case 0: return [4 /*yield*/, connect.capsuleData(null, null, null, null, function (data) { return collectedData = data; })];
                 case 1:
+                    _a.sent();
+                    console.log("done");
+                    console.log(collectedData + ' db');
+                    return [2 /*return*/, collectedData];
+            }
+        });
+    });
+}
+function getDataFromApi(data, callback) {
+    return __awaiter(this, void 0, void 0, function () {
+        var collectedData;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    collectedData = [];
+                    if (!(data == "Not Found")) return [3 /*break*/, 2];
+                    return [4 /*yield*/, getDataFromDb()];
+                case 1:
+                    collectedData = _a.sent();
+                    console.log(collectedData + 'if');
+                    return [3 /*break*/, 4];
+                case 2: 
+                // console.log(data)
+                return [4 /*yield*/, data.forEach(function (element) {
+                        collectedData.push({
+                            last_update: element.last_update,
+                            id: element.id,
+                            serial: element.serial,
+                            type: element.type
+                        });
+                        connect.capsuleData(element.last_update, element.id, element.serial, element.type);
+                    })];
+                case 3:
                     // console.log(data)
                     _a.sent();
+                    _a.label = 4;
+                case 4:
                     callback(collectedData);
                     return [2 /*return*/];
             }
