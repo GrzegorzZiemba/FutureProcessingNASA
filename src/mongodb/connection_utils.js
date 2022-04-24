@@ -1,40 +1,30 @@
-async function getDatafromDatabase(dbName, callback, client) {
-	await client
-		.db()
-		.collection(dbName)
-		.find()
-		.toArray()
-		.then((each) => {
-			callback(each);
-			console.log("Done Async");
-		});
+const mongoose = require("mongoose");
+
+main().catch((err) => console.log(err));
+
+async function main() {
+	await mongoose.connect("mongodb://localhost:27017/test");
 }
-
-async function writeToDatabase(dbName, client, checking_id, argument) {
-	client
-		.db()
-		.collection(dbName)
-		.find({})
-		.toArray(function (err, result) {
-			if (err) throw err;
-			let checkVal = 0;
-			result.forEach((element) => {
-				if (element.id == checking_id) {
-					checkVal = 1;
-					return;
-				}
-			});
-			if (checkVal == 1) {
-				return;
-			} else {
-				putIntoDb();
-			}
-		});
-
-	async function putIntoDb() {
-		await client.db().collection(dbName).insertOne(argument);
+async function writeToDatabase(callback, argument, id, model) {
+	let checkVal = 0;
+	const findData = await model.find();
+	findData.forEach((element) => {
+		if (element.id == id) {
+			checkVal = 1;
+		}
+	});
+	if (checkVal == 0) {
+		const Data = new model(argument);
+		Data.save();
+		callback(await model.find());
 	}
 }
+
+async function getDatafromDatabase(callback, model) {
+	const foundData = await model.find();
+	callback(foundData);
+}
+
 module.exports = {
 	getDatafromDatabase: getDatafromDatabase,
 	writeToDatabase: writeToDatabase,

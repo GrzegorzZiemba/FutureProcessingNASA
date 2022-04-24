@@ -78,9 +78,7 @@ function getDataFromApi(data, callback) {
                     collectedData = _a.sent();
                     console.log(collectedData + 'if');
                     return [3 /*break*/, 4];
-                case 2: 
-                // console.log(data)
-                return [4 /*yield*/, data.forEach(function (element) {
+                case 2: return [4 /*yield*/, data.forEach(function (element) {
                         collectedData.push({
                             last_update: element.last_update,
                             id: element.id,
@@ -90,7 +88,6 @@ function getDataFromApi(data, callback) {
                         connect.capsuleData(element.last_update, element.id, element.serial, element.type);
                     })];
                 case 3:
-                    // console.log(data)
                     _a.sent();
                     _a.label = 4;
                 case 4:

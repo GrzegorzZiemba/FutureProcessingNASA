@@ -1,17 +1,12 @@
-const { MongoClient } = require("mongodb");
-const connectionUtils = require("./connection_utils.js");
-const uri = "mongodb://localhost:27017/?readPreference=primary&ssl=false";
-const client = new MongoClient(uri);
+const mongoose = require("mongoose");
+const connectionUtils = require("./connection_utils");
+const mongoose_schema = require("./mongoose_schema");
+
+main().catch((err) => console.log(err));
 
 async function main() {
-	try {
-		await client.connect();
-		console.log("connected");
-	} catch (e) {
-		console.error(e);
-	}
+	await mongoose.connect("mongodb://localhost:27017/test");
 }
-main().catch(console.error);
 
 async function capsuleData(
 	last_update = null,
@@ -21,15 +16,19 @@ async function capsuleData(
 	callback = null
 ) {
 	const doc = { last_update, id, serial, type };
+
 	if (id == null) {
-		console.log("Null");
-		await connectionUtils.getDatafromDatabase("ThatDb", callback, client);
+		await connectionUtils.getDatafromDatabase(callback, mongoose_schema.model);
 	} else {
-		connectionUtils.writeToDatabase("ThatDb", client, doc.id, doc);
+		connectionUtils.writeToDatabase(
+			callback,
+			doc,
+			doc.id,
+			mongoose_schema.model
+		);
 	}
 }
 
 module.exports = {
-	client: client,
 	capsuleData: capsuleData,
 };
