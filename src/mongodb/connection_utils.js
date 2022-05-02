@@ -7,6 +7,7 @@ async function main() {
 }
 async function writeToDatabase(callback, argument, id, model) {
 	let checkVal = 0;
+	console.log("Doszedłem do Connection_utils !!");
 	const findData = await model.find();
 	findData.forEach((element) => {
 		if (element.id == id) {

@@ -1,4 +1,11 @@
 const mongoose = require("mongoose");
+const getRoadster = {
+	name: String,
+	launch_date_utc: String,
+	longitude: Number,
+	earth_distance_km: Number,
+	id: Number,
+};
 
 const capsule = {
 	last_update: String,
@@ -7,10 +14,15 @@ const capsule = {
 	type: String,
 };
 
-const dataSchema = new mongoose.Schema(capsule);
-const NewModel = mongoose.model("capsule", dataSchema);
+console.log(getRoadster);
+const capsuleSchema = new mongoose.Schema(capsule);
+const CapsuleModel = mongoose.model("capsule", capsuleSchema);
+
+const roadsterSchema = new mongoose.Schema(getRoadster);
+const RoadsterModel = mongoose.model("roadster", roadsterSchema);
 
 module.exports = {
-	model: NewModel,
+	roadsterModel: RoadsterModel,
+	model: CapsuleModel,
 	capsule: capsule,
 };

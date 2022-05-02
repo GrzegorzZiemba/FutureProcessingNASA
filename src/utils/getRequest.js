@@ -1,4 +1,14 @@
-"use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -35,66 +45,71 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-exports.__esModule = true;
 var request = require('request');
 var connect = require('../mongodb/connect');
-var collectedData = [];
-exports.getcapsule = function (callback) {
-    var url = "https://api.spacexdata.com/v4/capsules";
+var getData = function (callback, interface) {
+    var url = "https://api.spacexdata.com/v4/roaster";
     request({ url: url, json: true }, function (err, _a) {
         var body = _a.body;
         if (err) {
             console.log('Critical error');
         }
         else {
-            getDataFromApi(body, callback);
+            getDataFromApi(body, callback, interface);
         }
     });
 };
-function getDataFromDb() {
+function getDataFromDb(interface) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, connect.capsuleData(null, null, null, null, function (data) { return collectedData = data; })];
+                case 0: return [4 /*yield*/, connect.roadsterData(null, null, null, null, null, function (data) { return interface = data; })];
                 case 1:
                     _a.sent();
                     console.log("done");
-                    console.log(collectedData + ' db');
-                    return [2 /*return*/, collectedData];
+                    console.log(interface + ' db');
+                    return [2 /*return*/, interface];
             }
         });
     });
 }
-function getDataFromApi(data, callback) {
+function getDataFromApi(data, callback, interface) {
     return __awaiter(this, void 0, void 0, function () {
         var collectedData;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
                     collectedData = [];
-                    console.log(data + 'data' + data.length);
                     if (!(data == "Not Found")) return [3 /*break*/, 2];
-                    return [4 /*yield*/, getDataFromDb()];
+                    return [4 /*yield*/, getDataFromDb(interface)];
                 case 1:
                     collectedData = _a.sent();
                     console.log(collectedData + 'if');
-                    return [3 /*break*/, 4];
-                case 2: return [4 /*yield*/, data.forEach(function (element) {
-                        collectedData.push({
-                            last_update: element.last_update,
-                            id: element.id,
-                            serial: element.serial,
-                            type: element.type
-                        });
-                        connect.capsuleData(element.last_update, element.id, element.serial, element.type);
-                    })];
+                    return [3 /*break*/, 7];
+                case 2:
+                    if (!data.length) return [3 /*break*/, 4];
+                    return [4 /*yield*/, data.forEach(function (element) {
+                            collectedData.push(__assign({}, element));
+                            connect.capsuleData.apply(connect, element);
+                        })];
                 case 3:
                     _a.sent();
-                    _a.label = 4;
-                case 4:
+                    return [3 /*break*/, 7];
+                case 4: return [4 /*yield*/, collectedData.push(data.name, data.launch_date_utc, data.longitude, data.earth_distance_km, data.id, callback)];
+                case 5:
+                    _a.sent();
+                    console.log(data + " -.-,0,0");
+                    return [4 /*yield*/, connect.roadsterData(data.name, data.launch_date_utc, data.longitude, data.earth_distance_km, data.id, callback)];
+                case 6:
+                    _a.sent();
+                    _a.label = 7;
+                case 7:
                     callback(collectedData);
                     return [2 /*return*/];
             }
         });
     });
 }
+module.exports = {
+    getData: getData
+};

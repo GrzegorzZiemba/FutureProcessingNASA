@@ -14,9 +14,14 @@ app.use(express.static(path.join(__dirname, "public")))
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-const capsuleRoutes = require('./routes/capsuleRoute')
+app.get('/',  function (req, res) {
+	res.render("main")
+})
 
+const capsuleRoutes = require('./routes/capsuleRoute')
+const roadsterRoute = require('./routes/roadsterRoute')
 
 app.use(capsuleRoutes)
+app.use(roadsterRoute)
 
 app.listen(3000)

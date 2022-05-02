@@ -29,6 +29,34 @@ async function capsuleData(
 	}
 }
 
+async function roadsterData(
+	name = null,
+	launch_date_utc = null,
+	longitude = null,
+	earth_distance_km = null,
+	id = null,
+	callback
+) {
+	const doc = { name, launch_date_utc, longitude, earth_distance_km, id };
+	console.log(doc);
+	console.log(name + " =====..");
+
+	if (doc.id == null) {
+		await connectionUtils.getDatafromDatabase(
+			callback,
+			mongoose_schema.roadsterModel
+		);
+	} else {
+		connectionUtils.writeToDatabase(
+			callback,
+			doc,
+			doc.id,
+			mongoose_schema.roadsterModel
+		);
+	}
+}
+
 module.exports = {
 	capsuleData: capsuleData,
+	roadsterData: roadsterData,
 };

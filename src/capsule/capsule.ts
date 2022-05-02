@@ -27,7 +27,7 @@ async function getDataFromDb() {
 
 async function getDataFromApi(data: any,callback) {
 	let collectedData = [];
-
+	console.log(data + 'data' + data.length)
 	if(data == "Not Found"){
 		collectedData = await getDataFromDb();
 		console.log(collectedData + 'if')
