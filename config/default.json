@@ -1,0 +1,13 @@
+{
+  "Customer": {
+    "dbConfig": {
+      "host": "localhost",
+      "port": 3000,
+      "dbName": "customers"
+    }},
+    "mongoUrl": "mongodb://localhost:27017/test",
+    "dragonFetchUrl": "https://api.spacexdata.com/v4/dragons",
+    "capsuleFetchUrl": "https://api.spacexdata.com/v4/capsules"
+
+
+}

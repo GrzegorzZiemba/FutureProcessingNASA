@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 const dragonSchema = new Schema({
 	heatShield: String,
 	dragonImage: Array,
-	first_flight: String,
+	firstFlight: String,
 
 	id: String,
 });

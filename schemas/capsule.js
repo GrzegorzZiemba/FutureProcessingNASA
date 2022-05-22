@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const capsuleSchema = new Schema({
-	last_update: String,
+	lastUpdate: String,
 	id: String,
 	serial: String,
 	type: String,

@@ -1,30 +1,27 @@
 const Capsule = require("../schemas/capsule");
-const fetchItems = require("../utils/fetch");
+const fetchItems = require("../service/spaceX");
+const log = require("../service/logger");
+const dbSaver = require("./dbSaver");
 
-const capsuleMongo = () => {
-	return fetchItems
-		.fetchCapsules()
-		.then((result) => {
-			result.data.forEach((el) => {
-				const capsule = new Capsule({
-					last_update: el.last_update,
-					id: el.id,
-					serial: el.serial,
-					type: el.type,
-				});
+const capsuleMongo = async () => {
+	const { data } = await fetchItems.fetchCapsules();
 
-				Capsule.find({ id: el.id })
-					.then((el) => {
-						if (el.length === 0) {
-							capsule.save();
-						} else {
-							return;
-						}
-					})
-					.catch((err) => console.log(err));
+	try {
+		return await data.forEach((element) => {
+			const capsule = new Capsule({
+				lastUpdate: element.last_update,
+				id: element.id,
+				serial: element.serial,
+				type: element.type,
 			});
-		})
-		.catch((err) => console.log("Not Found Capsules - Check link"));
+			const obj = {
+				id: element.id,
+			};
+			dbSaver(Capsule, obj, capsule);
+		});
+	} catch (err) {
+		log.info(err.message);
+	}
 };
 
 module.exports = {

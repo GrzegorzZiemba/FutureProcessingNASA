@@ -1,9 +1,9 @@
 const axios = require("axios");
-
-const capsuleUrl = "https://api.spacexdata.com/v4/capsules";
+const config = require("config");
+const capsuleUrl = config.get("capsuleFetchUrl");
 module.exports = fetchCapsules = () => axios.get(capsuleUrl);
 
-const dragonUrl = "https://api.spacexdata.com/v4/dragons";
+const dragonUrl = config.get("dragonFetchUrl");
 module.exports = fetchDragons = () => axios.get(dragonUrl);
 
 module.exports = {
