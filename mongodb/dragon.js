@@ -20,7 +20,7 @@ const dragonMongo = async () => {
 			dbSaver(Dragon, obj, dragon);
 		});
 	} catch (error) {
-		log.info(error);
+		log.info(error, "more on this: %s", msg);
 	}
 };
 

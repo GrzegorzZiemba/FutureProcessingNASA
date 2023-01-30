@@ -7,7 +7,7 @@
     }},
     "mongoUrl": "mongodb://localhost:27017/test",
     "dragonFetchUrl": "https://api.spacexdata.com/v4/dragons",
-    "capsuleFetchUrl": "https://api.spacexdata.com/v4/capsules"
-
+    "capsuleFetchUrl": "https://api.spacexdata.com/v4/capsules",
+    "RoadsterFetchUrl":"https://api.spacexdata.com/v3/roadster"
 
 }
