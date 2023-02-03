@@ -1,11 +1,37 @@
 {
-  "name": "nasa",
+  "name": "SpaceXProject",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon app.js",
+    "test": "mocha 'test/apitest.js'",
+    "prepare": "husky install"
   },
+  "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.26.1",
+    "bunyan": "^1.8.15",
+    "concurrently": "^7.2.1",
+    "config": "^3.3.7",
+    "cors": "^2.8.5",
+    "ejs": "^3.1.6",
+    "express": "^4.17.3",
+    "mocha": "^10.0.0",
+    "mongodb": "^4.5.0",
+    "mongoose": "^6.3.1",
+    "nodemon": "^2.0.16",
+    "request": "^2.88.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.16.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.0",
+    "eslint-plugin-promise": "^6.0.0",
+    "husky": "^8.0.1",
+    "supertest": "^6.2.3"
+  }
 }
